@@ -43,7 +43,7 @@ public class HelloAxonApplication {
     private EventStore eventStore = setupEventStore();
 
     EventSourcingRepository<MessagesAggregate> repository =
-            new EventSourcingRepository<MessagesAggregate>(MessagesAggregate.class, eventStore);
+            new EventSourcingRepository<>(MessagesAggregate.class, eventStore);
 
     AggregateAnnotationCommandHandler<MessagesAggregate> handler = setupHandler();
 
@@ -52,7 +52,7 @@ public class HelloAxonApplication {
 
     private AggregateAnnotationCommandHandler<MessagesAggregate> setupHandler() {
         AggregateAnnotationCommandHandler<MessagesAggregate> handler =
-                new AggregateAnnotationCommandHandler<MessagesAggregate>(MessagesAggregate.class, repository);
+                new AggregateAnnotationCommandHandler<>(MessagesAggregate.class, repository);
         handler.subscribe(commandBus);
         return handler;
     }
