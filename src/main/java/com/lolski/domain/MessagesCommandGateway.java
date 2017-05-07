@@ -1,4 +1,4 @@
-package com.lolski;
+package com.lolski.domain;
 
 import com.lolski.domain.MessageEventHandler;
 import com.lolski.domain.MessagesAggregate;
@@ -19,19 +19,16 @@ import org.springframework.stereotype.Component;
 import java.util.UUID;
 
 @Component
-public class HelloAxonApplication {
+public class MessagesCommandGateway {
 
   @Autowired
-  public HelloAxonApplication(CommandBus commandBus, EventStore eventStore) {
-    String text = "hello offer manager 2";
+  public MessagesCommandGateway(CommandBus commandBus, EventStore eventStore) {
 
     this.commandBus = commandBus;
     this.eventStore = setupEventStore(eventStore, setupAnnotationEventListenerAdapter());
     this.commandGateway = setupCommandGateway(commandBus);
     this.repository = setupEventSourcingRepository(MessagesAggregate.class, eventStore);
     this.aggregateAnnotationCommandHandler = setupAggregateAnnotationCommandHandler(commandBus, repository, MessagesAggregate.class);
-    String messageId = sendMessage(text);
-    markAsRead(messageId);
   }
 
   public String sendMessage(String text) {

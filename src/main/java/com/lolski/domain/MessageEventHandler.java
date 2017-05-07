@@ -7,7 +7,7 @@ import org.axonframework.eventhandling.EventHandler;
 public class MessageEventHandler {
     @EventHandler
     public void handle(MessageCreatedEvent messageCreatedEvent) {
-        System.out.println("received a new message " + messageCreatedEvent.getId());
+        System.out.println("received a new message '" + messageCreatedEvent.getText() + "' with id '" + messageCreatedEvent.getId() + "'");
     }
 
     @EventHandler
