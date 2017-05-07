@@ -14,10 +14,14 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class JavaConfig {
-    @Bean
-    public CommandBus commandBus() {
-        return new SimpleCommandBus();
-    }
+  @Bean
+  public CommandBus commandBus() {
+    return new SimpleCommandBus();
+  }
 
-    @Bean EventStore eventStore() { return new EmbeddedEventStore(new InMemoryEventStorageEngine()); }
+  @Bean
+  public EventStore eventStore() {
+    return new EmbeddedEventStore(new InMemoryEventStorageEngine());
+  }
+
 }

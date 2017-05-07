@@ -11,30 +11,30 @@ import org.axonframework.eventhandling.EventHandler;
 import static org.axonframework.commandhandling.model.AggregateLifecycle.apply;
 
 public class MessagesAggregate {
-    @AggregateIdentifier
-    private String id;
+  @AggregateIdentifier
+  private String id;
 
-    public MessagesAggregate() {
-       // is this necessary?
-    }
+  public MessagesAggregate() {
+    // is this necessary?
+  }
 
-    @CommandHandler
-    public MessagesAggregate(CreateMessageCommand createMessageCommand) {
-        apply(new MessageCreatedEvent(createMessageCommand.getId(), createMessageCommand.getText()));
-    }
+  @CommandHandler
+  public MessagesAggregate(CreateMessageCommand createMessageCommand) {
+    apply(new MessageCreatedEvent(createMessageCommand.getId(), createMessageCommand.getText()));
+  }
 
-    @EventHandler
-    public void on(MessageCreatedEvent messageCreatedEvent) {
-        this.id = messageCreatedEvent.getId();
-    }
+  @EventHandler
+  public void on(MessageCreatedEvent messageCreatedEvent) {
+    this.id = messageCreatedEvent.getId();
+  }
 
-    @CommandHandler
-    public void markRead(MarkMessageReadCommand markMessageReadCommand) {
-        apply(new MessageReadEvent(markMessageReadCommand.getId()));
-    }
+  @CommandHandler
+  public void markRead(MarkMessageReadCommand markMessageReadCommand) {
+    apply(new MessageReadEvent(markMessageReadCommand.getId()));
+  }
 
-    @EventHandler
-    public void on(MessageReadEvent messageReadEvent) {
+  @EventHandler
+  public void on(MessageReadEvent messageReadEvent) {
 
-    }
+  }
 }

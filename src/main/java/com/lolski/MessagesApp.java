@@ -1,19 +1,18 @@
 package com.lolski;
 
-import com.lolski.domain.MessagesAggregate;
-import com.lolski.domain.MessagesCommandGateway;
+import com.lolski.domain.MessagesCommandHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MessagesApp {
   @Autowired
-  public MessagesApp(MessagesCommandGateway messagesCommandGateway) {
+  public MessagesApp(MessagesCommandHandler messagesCommandGateway) {
     this.messagesCommandGateway = messagesCommandGateway;
 
-    String messageId = messagesCommandGateway.sendMessage("hello offer manager 2");
-    messagesCommandGateway.markAsRead(messageId);
+    String messageId = this.messagesCommandGateway.sendMessage("hello offer manager 2");
+    this.messagesCommandGateway.markAsRead(messageId);
   }
 
-  private MessagesCommandGateway messagesCommandGateway;
+  private MessagesCommandHandler messagesCommandGateway;
 }
