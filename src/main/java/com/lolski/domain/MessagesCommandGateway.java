@@ -23,9 +23,7 @@ public class MessagesCommandGateway {
 
   @Autowired
   public MessagesCommandGateway(CommandBus commandBus, EventStore eventStore) {
-
-    this.commandBus = commandBus;
-    this.eventStore = setupEventStore(eventStore, setupAnnotationEventListenerAdapter());
+    this.eventStore = setupEventStore(eventStore, setupAnnotationEventListenerAdapter(new MessageEventHandler()));
     this.commandGateway = setupCommandGateway(commandBus);
     this.repository = setupEventSourcingRepository(MessagesAggregate.class, eventStore);
     this.aggregateAnnotationCommandHandler = setupAggregateAnnotationCommandHandler(commandBus, repository, MessagesAggregate.class);
@@ -41,7 +39,6 @@ public class MessagesCommandGateway {
     commandGateway.send(new MarkMessageReadCommand(messageId));
   }
 
-  private CommandBus commandBus;
   private EventStore eventStore;
   private CommandGateway commandGateway;
   private EventSourcingRepository<MessagesAggregate> repository;
@@ -61,8 +58,8 @@ public class MessagesCommandGateway {
     return new DefaultCommandGateway(commandBus);
   }
 
-  private AnnotationEventListenerAdapter setupAnnotationEventListenerAdapter() {
-    return new AnnotationEventListenerAdapter(new MessageEventHandler());
+  private AnnotationEventListenerAdapter setupAnnotationEventListenerAdapter(MessageEventHandler messageEventHandler) {
+    return new AnnotationEventListenerAdapter(messageEventHandler);
   }
 
   private <T> AggregateAnnotationCommandHandler<T>setupAggregateAnnotationCommandHandler(CommandBus commandBus,
