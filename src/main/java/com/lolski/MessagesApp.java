@@ -7,12 +7,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class MessagesApp {
   @Autowired
-  public MessagesApp(MessagesCommandHandler messagesCommandGateway) {
-    this.messagesCommandGateway = messagesCommandGateway;
+  public MessagesApp(MessagesCommandHandler messagesCommandHandler) {
+    this.messagesCommandHandler = messagesCommandHandler;
 
-    String messageId = this.messagesCommandGateway.sendMessage("hello offer manager 2");
-    this.messagesCommandGateway.markAsRead(messageId);
+    String messageId = this.messagesCommandHandler.sendMessage("hello offer manager 2");
+    this.messagesCommandHandler.markAsRead(messageId);
   }
 
-  private MessagesCommandHandler messagesCommandGateway;
+  private MessagesCommandHandler messagesCommandHandler;
 }

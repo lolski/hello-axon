@@ -1,5 +1,8 @@
 package com.lolski.config;
 
+import com.lolski.domain.MessagesCommandHandler;
+import com.lolski.domain.MessagesEventHandler;
+import com.lolski.kafka.MessagesKafkaProducer;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.SimpleCommandBus;
 import org.axonframework.commandhandling.gateway.CommandGateway;
@@ -13,7 +16,31 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class JavaConfig {
+public class AppConfig {
+
+  /*
+   * =====================
+   * app wiring
+   * =====================
+   */
+  // message command handler <--> kafka consumer
+  // message command handler <--> kafka producer
+//  @Bean
+//  public MessagesEventHandler messagesEventHandler() { return new MessagesEventHandler(messagesKafkaProducer()); }
+
+  /*
+   * =====================
+   * kafka config
+   * =====================
+   */
+  @Bean
+  public MessagesKafkaProducer messagesKafkaProducer() { return new MessagesKafkaProducer(); }
+
+  /*
+   * =====================
+   * axon config
+   * =====================
+   */
   @Bean
   public CommandBus commandBus() {
     return new SimpleCommandBus();

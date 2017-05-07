@@ -1,8 +1,8 @@
 package com.lolski.domain;
 
-import com.lolski.wiring.MessageEventHandler;
 import com.lolski.domain.commands.CreateMessageCommand;
 import com.lolski.domain.commands.MarkMessageReadCommand;
+import com.lolski.kafka.MessagesKafkaProducer;
 import org.axonframework.commandhandling.AggregateAnnotationCommandHandler;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.gateway.CommandGateway;
@@ -22,7 +22,7 @@ public class MessagesCommandHandler {
 
   @Autowired
   public MessagesCommandHandler(CommandBus commandBus, EventStore eventStore) {
-    MessageEventHandler annotatedEventListener = new MessageEventHandler();
+    MessagesEventHandler annotatedEventListener = new MessagesEventHandler(new MessagesKafkaProducer());
     EventSourcingRepository<MessagesAggregate> repository = newEventSourcingRepository(MessagesAggregate.class, eventStore);
     AggregateAnnotationCommandHandler<MessagesAggregate> aggregateAnnotationCommandHandler =
         newAggregateAnnotationCommandHandler(repository, MessagesAggregate.class);
