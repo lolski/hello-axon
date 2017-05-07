@@ -1,4 +1,4 @@
-package com.lolski.events;
+package com.lolski.domain.events;
 
 public class MessageCreatedEvent {
     private String id;

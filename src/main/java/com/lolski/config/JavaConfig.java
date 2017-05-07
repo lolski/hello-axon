@@ -1,4 +1,4 @@
-package com.lolski;
+package com.lolski.config;
 
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.SimpleCommandBus;
@@ -18,4 +18,6 @@ public class JavaConfig {
     public CommandBus commandBus() {
         return new SimpleCommandBus();
     }
+
+    @Bean EventStore eventStore() { return new EmbeddedEventStore(new InMemoryEventStorageEngine()); }
 }

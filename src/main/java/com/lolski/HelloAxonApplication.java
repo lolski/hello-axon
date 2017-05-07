@@ -1,7 +1,9 @@
 package com.lolski;
 
-import com.lolski.commands.CreateMessageCommand;
-import com.lolski.commands.MarkMessageReadCommand;
+import com.lolski.domain.MessageEventHandler;
+import com.lolski.domain.MessagesAggregate;
+import com.lolski.domain.commands.CreateMessageCommand;
+import com.lolski.domain.commands.MarkMessageReadCommand;
 import org.axonframework.commandhandling.AggregateAnnotationCommandHandler;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.gateway.CommandGateway;
@@ -18,58 +20,73 @@ import java.util.UUID;
 
 @Component
 public class HelloAxonApplication {
-    public HelloAxonApplication() {
-        String text = "hello offer manager 2";
 
-        String messageId = sendMessage(text);
-        markAsRead(messageId);
-    }
+  @Autowired
+  public HelloAxonApplication(CommandBus commandBus, EventStore eventStore) {
+    String text = "hello offer manager 2";
 
-    public String sendMessage(String text) {
-        String uuid = UUID.randomUUID().toString();
-        commandGateway.send(new CreateMessageCommand(uuid, text));
-        return uuid;
-    }
+    this.commandBus = commandBus;
+    this.eventStore = setupEventStore(eventStore, setupAnnotationEventListenerAdapter());
+    this.commandGateway = setupCommandGateway(commandBus);
+    this.repository = setupEventSourcingRepository(MessagesAggregate.class, eventStore);
+    this.aggregateAnnotationCommandHandler = setupAggregateAnnotationCommandHandler(commandBus, repository, MessagesAggregate.class);
+    String messageId = sendMessage(text);
+    markAsRead(messageId);
+  }
 
-    public void markAsRead(String messageId) {
-        commandGateway.send(new MarkMessageReadCommand(messageId));
-    }
+  public String sendMessage(String text) {
+    String uuid = UUID.randomUUID().toString();
+    commandGateway.send(new CreateMessageCommand(uuid, text));
+    return uuid;
+  }
 
-    @Autowired
-    private CommandBus commandBus;
+  public void markAsRead(String messageId) {
+    commandGateway.send(new MarkMessageReadCommand(messageId));
+  }
 
-    private CommandGateway commandGateway = new DefaultCommandGateway(commandBus);
+  private CommandBus commandBus;
+  private EventStore eventStore;
+  private CommandGateway commandGateway;
+  private EventSourcingRepository<MessagesAggregate> repository;
+  private AggregateAnnotationCommandHandler<MessagesAggregate> aggregateAnnotationCommandHandler;
 
-    private EventStore eventStore = setupEventStore();
+  /*
+  *
+  * setup methods
+  *
+  */
 
-    EventSourcingRepository<MessagesAggregate> repository =
-            new EventSourcingRepository<>(MessagesAggregate.class, eventStore);
+  private <T> EventSourcingRepository<T> setupEventSourcingRepository(Class<T> aggregateType, EventStore eventStore) {
+    return new EventSourcingRepository<>(aggregateType, eventStore);
+  }
 
-    AggregateAnnotationCommandHandler<MessagesAggregate> handler = setupHandler();
+  private CommandGateway setupCommandGateway(CommandBus commandBus) {
+    return new DefaultCommandGateway(commandBus);
+  }
 
-    AnnotationEventListenerAdapter annotationEventListenerAdapter =
-            new AnnotationEventListenerAdapter(new MessageEventHandler());
+  private AnnotationEventListenerAdapter setupAnnotationEventListenerAdapter() {
+    return new AnnotationEventListenerAdapter(new MessageEventHandler());
+  }
 
-    private AggregateAnnotationCommandHandler<MessagesAggregate> setupHandler() {
-        AggregateAnnotationCommandHandler<MessagesAggregate> handler =
-                new AggregateAnnotationCommandHandler<>(MessagesAggregate.class, repository);
-        handler.subscribe(commandBus);
-        return handler;
-    }
+  private <T> AggregateAnnotationCommandHandler<T>setupAggregateAnnotationCommandHandler(CommandBus commandBus,
+    EventSourcingRepository<T> repository, Class<T> aggregateType) {
+    AggregateAnnotationCommandHandler<T> handler = new AggregateAnnotationCommandHandler<>(aggregateType, repository);
+    handler.subscribe(commandBus);
+    return handler;
+  }
 
-    private EventStore setupEventStore() {
-        EventStore eventStore = new EmbeddedEventStore(new InMemoryEventStorageEngine());
-        eventStore.subscribe(eventMessages ->
-                eventMessages.forEach(msg -> {
-                    try {
-                        annotationEventListenerAdapter.handle(msg);
-                    }
-                    catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                })
-        );
+  private EventStore setupEventStore(EventStore eventStore, AnnotationEventListenerAdapter annotationEventListenerAdapter) {
+    eventStore.subscribe(eventMessages ->
+        eventMessages.forEach(msg -> {
+          try {
+            annotationEventListenerAdapter.handle(msg);
+          }
+          catch (Exception e) {
+            throw new RuntimeException(e);
+          }
+        })
+    );
 
-        return eventStore;
-    }
+    return eventStore;
+  }
 }

@@ -1,7 +1,7 @@
-package com.lolski;
+package com.lolski.domain;
 
-import com.lolski.events.MessageCreatedEvent;
-import com.lolski.events.MessageReadEvent;
+import com.lolski.domain.events.MessageCreatedEvent;
+import com.lolski.domain.events.MessageReadEvent;
 import org.axonframework.eventhandling.EventHandler;
 
 public class MessageEventHandler {

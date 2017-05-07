@@ -1,4 +1,4 @@
-package com.lolski.commands;
+package com.lolski.domain.commands;
 
 import org.axonframework.commandhandling.TargetAggregateIdentifier;
 
