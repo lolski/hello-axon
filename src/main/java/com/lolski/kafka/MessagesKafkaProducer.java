@@ -20,12 +20,14 @@ public class MessagesKafkaProducer {
   }
   public void send(MessageCreated messageCreated) {
     System.out.println(AnsiColor.ANSI_YELLOW + "received a new message '" + messageCreated.getText() + "' with id '" + messageCreated.getId() + "'" + AnsiColor.ANSI_RESET);
-    this.output.send(MessageBuilder.withPayload("(" + messageCreated.getId() + "," + messageCreated.getText() + ")").build());
+    boolean status = this.output.send(MessageBuilder.withPayload("(" + messageCreated.getId() + "," + messageCreated.getText() + ")").build());
+    System.out.println(AnsiColor.ANSI_YELLOW + " new message status = " + status + AnsiColor.ANSI_RESET);
   }
 
   public void send(MessageRead messageRead) {
     System.out.println(AnsiColor.ANSI_YELLOW + "message " + messageRead.getId() + " marked as read" + AnsiColor.ANSI_RESET);
-    this.output.send(MessageBuilder.withPayload("(" + messageRead.getId() + ")").build());
+    boolean status = this.output.send(MessageBuilder.withPayload("(" + messageRead.getId() + ")").build());
+    System.out.println(AnsiColor.ANSI_YELLOW + " message read status = " + status + AnsiColor.ANSI_RESET);
   }
 
   private MessageChannel output;
