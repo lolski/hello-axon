@@ -3,6 +3,7 @@ package com.lolski.kafka;
 import com.lolski.AnsiColor;
 import kafka.Kafka;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.Output;
 import org.springframework.integration.support.MessageBuilder;
