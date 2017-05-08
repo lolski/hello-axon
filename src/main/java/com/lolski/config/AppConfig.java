@@ -7,6 +7,8 @@ import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.SimpleCommandBus;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.commandhandling.gateway.DefaultCommandGateway;
+import org.axonframework.eventhandling.EventBus;
+import org.axonframework.eventhandling.SimpleEventBus;
 import org.axonframework.eventsourcing.eventstore.EmbeddedEventStore;
 import org.axonframework.eventsourcing.eventstore.EventStore;
 import org.axonframework.eventsourcing.eventstore.inmemory.InMemoryEventStorageEngine;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.MessageChannel;
 
 @Configuration
 public class AppConfig {
@@ -23,7 +26,8 @@ public class AppConfig {
    * =====================
    */
   @Bean
-  public MessagesKafkaProducer messagesKafkaProducer() { return new MessagesKafkaProducer(); }
+  @Autowired
+  public MessagesKafkaProducer messagesKafkaProducer(MessageChannel output) { return new MessagesKafkaProducer(output); }
 
   /*
    * =====================
@@ -38,6 +42,11 @@ public class AppConfig {
   @Bean
   public EventStore eventStore() {
     return new EmbeddedEventStore(new InMemoryEventStorageEngine());
+  }
+
+  @Bean
+  public EventBus eventBus() {
+    return new SimpleEventBus();
   }
 
   /*

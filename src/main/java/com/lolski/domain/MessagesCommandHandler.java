@@ -1,5 +1,6 @@
 package com.lolski.domain;
 
+import com.lolski.AnsiColor;
 import com.lolski.domain.commands.CreateMessageCommand;
 import com.lolski.domain.commands.MarkMessageReadCommand;
 import com.lolski.kafka.MessagesKafkaProducer;
@@ -22,6 +23,7 @@ public class MessagesCommandHandler {
 
   @Autowired
   public MessagesCommandHandler(CommandBus commandBus, EventStore eventStore, MessagesEventHandler annotatedEventListener) {
+    System.out.println(AnsiColor.ANSI_YELLOW + annotatedEventListener + AnsiColor.ANSI_RESET);
     EventSourcingRepository<MessagesAggregate> repository = newEventSourcingRepository(MessagesAggregate.class, eventStore);
     AggregateAnnotationCommandHandler<MessagesAggregate> aggregateAnnotationCommandHandler =
         newAggregateAnnotationCommandHandler(repository, MessagesAggregate.class);
