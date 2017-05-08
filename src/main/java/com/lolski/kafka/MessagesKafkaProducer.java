@@ -18,6 +18,7 @@ public class MessagesKafkaProducer {
   public MessagesKafkaProducer(MessageChannel output) {
     this.output = output;
   }
+
   public void send(MessageCreated messageCreated) {
     System.out.println(AnsiColor.ANSI_YELLOW + "received a new message '" + messageCreated.getText() + "' with id '" + messageCreated.getId() + "'" + AnsiColor.ANSI_RESET);
     boolean status = this.output.send(MessageBuilder.withPayload("(" + messageCreated.getId() + "," + messageCreated.getText() + ")").build());
@@ -31,5 +32,4 @@ public class MessagesKafkaProducer {
   }
 
   private MessageChannel output;
-
 }
