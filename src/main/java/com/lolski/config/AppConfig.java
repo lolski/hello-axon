@@ -25,8 +25,8 @@ public class AppConfig {
    */
   // message command handler <--> kafka consumer
   // message command handler <--> kafka producer
-//  @Bean
-//  public MessagesEventHandler messagesEventHandler() { return new MessagesEventHandler(messagesKafkaProducer()); }
+  @Bean
+  public MessagesEventHandler messagesEventHandler() { return new MessagesEventHandler(messagesKafkaProducer()); }
 
   /*
    * =====================

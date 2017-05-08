@@ -21,8 +21,7 @@ import static com.lolski.domain.Helper.*;
 public class MessagesCommandHandler {
 
   @Autowired
-  public MessagesCommandHandler(CommandBus commandBus, EventStore eventStore) {
-    MessagesEventHandler annotatedEventListener = new MessagesEventHandler(new MessagesKafkaProducer());
+  public MessagesCommandHandler(CommandBus commandBus, EventStore eventStore, MessagesEventHandler annotatedEventListener) {
     EventSourcingRepository<MessagesAggregate> repository = newEventSourcingRepository(MessagesAggregate.class, eventStore);
     AggregateAnnotationCommandHandler<MessagesAggregate> aggregateAnnotationCommandHandler =
         newAggregateAnnotationCommandHandler(repository, MessagesAggregate.class);
