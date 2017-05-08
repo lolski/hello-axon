@@ -17,17 +17,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class AppConfig {
-
-  /*
-   * =====================
-   * app wiring
-   * =====================
-   */
-  // message command handler <--> kafka consumer
-  // message command handler <--> kafka producer
-  @Bean
-  public MessagesEventHandler messagesEventHandler() { return new MessagesEventHandler(messagesKafkaProducer()); }
-
   /*
    * =====================
    * kafka config
@@ -50,5 +39,14 @@ public class AppConfig {
   public EventStore eventStore() {
     return new EmbeddedEventStore(new InMemoryEventStorageEngine());
   }
+
+  /*
+   * =====================
+   * app wiring
+   * =====================
+   */
+  @Bean
+  @Autowired
+  public MessagesEventHandler messagesEventHandler(MessagesKafkaProducer messagesKafkaProducer) { return new MessagesEventHandler(messagesKafkaProducer); }
 
 }
