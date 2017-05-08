@@ -8,8 +8,8 @@ import com.lolski.kafka.MessagesKafkaProducer;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 
+
 public class MessagesEventHandler {
-  @Autowired
   public MessagesEventHandler(MessagesKafkaProducer messagesKafkaProducer) {
     this.kafkaProducer = messagesKafkaProducer;
   }
